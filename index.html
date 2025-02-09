@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca Digital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Reset e definição de fontes */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #2c3e50; /* Fundo mais escuro */
+            font-family: 'Poppins', sans-serif;
+            color: #ecf0f1; /* Cor do texto mais clara */
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Aplicar o desfoque no fundo durante a animação */
+        .blur-background {
+            backdrop-filter: blur(8px); /* Desfoque */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(44, 62, 80, 0.6); /* Cor semi-transparente */
+            z-index: 10;
+        }
+
+        header {
+            background-color: #34495e;
+            color: white;
+            padding: 30px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        /* Logo dentro de um círculo branco */
+        header .logo-container {
+            background-color: ;
+            border-radius: ;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        header img {
+            width: 300px; /* Logo maior */
+            height: 100px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        header button {
+            background-color: #e67e22;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        header button:hover {
+            background-color: #f39c12;
+        }
+
+        /* Estilo da animação de digitação */
+        .typing-animation-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 100;
+        }
+
+        .typing-animation-container p {
+            font-size: 1.5rem;
+            color: #ecf0f1;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-bar input, .search-bar select {
+            width: 250px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 30px;
+            transition: all 0.3s;
+        }
+
+        .search-bar input:focus, .search-bar select:focus {
+            outline: none;
+            border-color: #e67e22;
+        }
+
+        .book-card {
+            background-color: #34495e; /* Fundo mais escuro para os cards */
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+
+        .book-card-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-grow: 1;
+        }
+
+        .book-card-body h5 {
+            font-size: 18px;
+            color: #ecf0f1; /* Cor do texto mais clara */
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .book-card-body p {
+            font-size: 14px;
+            color: #bdc3c7;
+            margin-bottom: 15px;
+        }
+
+     .book-card-body a {
+    background-color: #2ecc71;
+    color: white;
+    padding: 15px 50px; /* Padding ajustado para garantir que o botão seja grande o suficiente */
+    text-align: center;
+    font-size: 16px;
+    text-decoration: none;
+    border-radius: 50px; /* Define o botão como redondo */
+    display: inline-block;
+    margin-top: 15px;
+    transition: background-color 0.3s;
+}
+
+.book-card-body a:hover {
+    background-color: #27ae60;
+}
+
+
+        .book-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 30px 50px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #34495e;
+            color: white;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+
+        /* Estilo da caixa de explicação */
+        .info-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 80%;
+            text-align: center;
+            display: none;
+            z-index: 1000;
+        }
+
+        .info-box img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+        }
+
+        .info-box p {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .info-box button {
+            background-color: #e67e22;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .info-box button:hover {
+            background-color: #f39c12;
+        }
+
+        /* Estilo para o botão de informações */
+        .info-button {
+            position: fixed;
+            bottom: 30px;
+            right: 15px;
+            background-color: #e67e22;
+            color: white;
+            padding: 20px;
+            border-radius: 100px;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 100;
+            border: none;
+            background-image: url('https://cdn-icons-png.flaticon.com/512/3778/3778876.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .info-button:hover {
+            background-color: #f39c12;
+        }
+
+        /* Responsividade para mobile */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .search-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .search-bar input, .search-bar select {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .info-button {
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Animação de digitação -->
+    <div class="typing-animation-container" id="typing-container">
+        <p id="typing-message-1"></p>
+        <p id="typing-message-2"></p>
+    </div>
+
+    <!-- Fundo embaçado -->
+    <div class="blur-background" id="blurBackground"></div>
+
+    <!-- Cabeçalho -->
+    <header>
+        <div class="logo-container">
+            <img src="https://iecers.wordpress.com/wp-content/uploads/2025/02/horizontal-branco.png" alt="Logo">
+        </div>
+        <h1>Biblioteca Digital da IECE-RS</h1>
+        <button onclick="window.location.href='https://iecers.org/'">Voltar ao Site</button>
+    </header>
+
+    <!-- Barra de Pesquisa e Filtro -->
+    <div class="container">
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Pesquisar por título ou descrição" oninput="filterBooks()">
+            <select id="categoryFilter" onchange="filterBooks()">
+                <option value="">Todas as Categorias</option>
+                <option value="Ficção">Ficção</option>
+                <option value="Romance">Romance</option>
+                <option value="História">História</option>
+                <option value="Ciência">Ciência</option>
+                <option value="Filosofia">Filosofia</option>
+                <option value="Literatura">Literatura</option>
+                <option value="Arte">Arte</option>
+                <option value="Política">Política</option>
+                <option value="Religião">Religião</option>
+                <option value="Psicologia">Psicologia</option>
+                <option value="Educação">Educação</option>
+                <option value="Tecnologia">Tecnologia</option>
+                <option value="Economia">Economia</option>
+                <option value="Biografias">Biografias</option>
+                <option value="Geografia">Geografia</option>
+                <option value="Antropologia">Antropologia</option>
+                <option value="Sociologia">Sociologia</option>
+                <option value="Matemática">Matemática</option>
+                <option value="Medicina">Medicina</option>
+                <option value="Engenharia">Engenharia</option>
+                <option value="Arquitetura">Arquitetura</option>
+                <option value="Astronomia">Astronomia</option>
+                <option value="Química">Química</option>
+                <option value="Física">Física</option>
+                <option value="Linguística">Linguística</option>
+                <option value="Poemas">Poemas</option>
+                <option value="Contos">Contos</option>
+                <option value="Novelas">Novelas</option>
+                <option value="Ensaios">Ensaios</option>
+                <option value="Relatórios">Relatórios</option>
+                <option value="Documentários">Documentários</option>
+                <option value="Romances Históricos">Romances Históricos</option>
+                <option value="Aventura">Aventura</option>
+                <option value="Mistério">Mistério</option>
+                <option value="Terror">Terror</option>
+                <option value="Fantasia">Fantasia</option>
+                <option value="Sci-Fi">Sci-Fi</option>
+                <option value="Contos de Fadas">Contos de Fadas</option>
+                <option value="Comédia">Comédia</option>
+                <option value="Drama">Drama</option>
+                <option value="Thriller">Thriller</option>
+                <option value="Crime">Crime</option>
+                <option value="Detective">Detective</option>
+                <option value="Espionagem">Espionagem</option>
+                <option value="Ação">Ação</option>
+                <option value="Viagem no Tempo">Viagem no Tempo</option>
+                <option value="Música">Música</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Grid de livros -->
+    <div class="book-grid" id="bookGrid"></div>
+
+    <!-- Caixa de informações -->
+    <div class="info-box" id="infoBox">
+        <img src="https://iecers.wordpress.com/wp-content/uploads/2025/02/quadrado-preto-1.png" alt="Logo">
+        <p>Este site oferece livros em formato PDF de domínio público. Você pode baixar e compartilhar à vontade. Aproveite!</p>
+        <button onclick="closeInfoBox()">Fechar</button>
+    </div>
+
+    <!-- Botão de informações -->
+    <button class="info-button" onclick="openInfoBox()"> </button>
+
+    <!-- Rodapé -->
+    <div class="footer">
+        <p>Biblioteca Digital - IECE-RS - Todos os direitos reservados © 2025</p>
+    </div>
+
+    <script>
+        // Função de animação de digitação
+        const messages = [
+            "Bem-vindo à nossa biblioteca!",
+            " Aqui você encontra livros de domínio público para download."
+        ];
+
+        let currentMessage = 0;
+        let currentLetter = 0;
+
+        function typeMessage() {
+            const typingMessage1 = document.getElementById('typing-message-1');
+            const typingMessage2 = document.getElementById('typing-message-2');
+
+            if (currentLetter < messages[currentMessage].length) {
+                typingMessage1.innerHTML += messages[currentMessage].charAt(currentLetter);
+                currentLetter++;
+                setTimeout(typeMessage, 50); // Animação mais rápida
+            } else {
+                currentMessage++;
+                if (currentMessage < messages.length) {
+                    currentLetter = 0;
+                    setTimeout(typeMessage, 1000);
+                } else {
+                    document.getElementById('typing-container').style.display = 'none'; // Esconder após a animação
+                    document.getElementById('blurBackground').style.display = 'none'; // Remover desfoque
+                }
+            }
+        }
+
+        typeMessage();
+
+        // Funções para abrir e fechar a caixa de informações
+        function openInfoBox() {
+            document.getElementById('infoBox').style.display = 'block';
+        }
+
+        function closeInfoBox() {
+            document.getElementById('infoBox').style.display = 'none';
+        }
+
+      // Dados dos livros (exemplo)
+const books = [
+    {
+        title: "Moby Dick",
+        description: "A clássica história de Ahab e sua obsessão com a caça à baleia branca.",
+        cover: "https://m.media-amazon.com/images/I/81Sji2eY5BL._UF894,1000_QL80_.jpg",
+        pdfLink: "http://www.lighthousebilingue.com.br/wp-content/uploads/2018/07/Moby-Dick-Herman-Melville.pdf",
+        category: "Ficção"
+    },
+
+    {
+        title: "A Carteira, de Machado de Assis",
+        description: "A carteira foi publicado por Machado de Assis de forma avulsa, depois no jornal A estação, em 1884.",
+        cover: "https://m.media-amazon.com/images/I/71Pa02dTfuL._UF894,1000_QL80_.jpg",
+        pdfLink: "http://www.dominiopublico.gov.br/download/texto/bv000169.pdf",
+        category: "Contos"
+    },
+    
+
+    {
+        title: "A Igreja do Diabo de Machado de Assis",
+        description: "Este conto, marcado pela ironia, apresenta a história do dia que o Diabo resolveu fundar uma igreja para concorrer com as diversas religiões.",
+        cover: "https://m.media-amazon.com/images/I/71LiVwwJQLL._UF894,1000_QL80_.jpg",
+        pdfLink: "http://www.dominiopublico.gov.br/download/texto/bv000195.pdf",
+        category: "Contos"
+    },
+    
+
+    {
+        title: "Cancioneiro - Fernando Pessoa",
+        description: "Cancioneiro reúne os poemas líricos que Fernando Pessoa assinou com o próprio nome.",
+        cover: "https://m.media-amazon.com/images/I/911XvMQbgnS._AC_UF1000,1000_QL80_.jpg",
+        pdfLink: "http://www.dominiopublico.gov.br/download/texto/ph000003.pdf",
+        category: "Poemas"
+    },
+    
+
+    {
+        title: "Poesias Inéditas - Fernando Pessoa",
+        description: "Ao que parece, os artigos escritos por Fernando Pessoa, relacionados à novíssima poesia portuguesa, que foram publicados no decorrer de 1912, podem ser ...",
+        cover: "https://images.tcdn.com.br/img/img_prod/371963/ebook_poemas_de_fernando_pessoa_6411_2_da205f0eae52cad85870d900afda9ef2.jpg",
+        pdfLink: "http://www.dominiopublico.gov.br/download/texto/jp000002.pdf",
+        category: "Poemas"
+    },
+    
+
+    {
+        title: "Livro do Desassossego - Fernando Pessoa",
+        description: "O coração, se pudesse pensar, pararia. Considero a vida uma estalagem onde tenho que me demorar até que chegue a diligência do abismo.",
+        cover: "https://m.media-amazon.com/images/I/91d09o66Z9L._AC_UF1000,1000_QL80_.jpg",
+        pdfLink: "http://www.dominiopublico.gov.br/download/texto/vo000008.pdf",
+        category: "Poemas"
+    },
+    
+    
+
+    {
+        title: "Memórias Póstumas de Brás Cubas - Machado de Assis ",
+        description: "Memórias Póstumas de Brás Cubas é um dos livros mais importantes da literatura brasileira.",
+        cover: "https://m.media-amazon.com/images/I/815u+SBDpJL.jpg",
+        pdfLink: "http://www.dominiopublico.gov.br/download/texto/bn000167.pdf",
+        category: "Romances Históricos"
+    },
+    
+
+    {
+        title: "Franz Kafka - A Metamorfose",
+        description: "A metamorfose é a mais célebre novela de Franz Kafka e uma das mais importantes de toda a história da literatura. ",
+        cover: "https://m.media-amazon.com/images/I/71QLwli7GUL.jpg",
+        pdfLink: "http://www.dominiopublico.gov.br/download/texto/ua00106a.pdf",
+        category: "Novelas"
+    },
+    
+
+    {
+        title: "O Eu profundo e os outros Eus de Fernando Pessoa ",
+        description: "á fora a antemanhã tão longínqua! a floresta tão aqui ante outros olhos meus!",
+        cover: "https://m.media-amazon.com/images/I/817t8yJQSeL._AC_UF1000,1000_QL80_.jpg",
+        pdfLink: "http://www.dominiopublico.gov.br/download/texto/vo000009.pdf",
+        category: "Poemas"
+    },
+    
+
+    {
+        title: "A Cartomante de Machado de Assis",
+        description: "Machado de Assis sempre poético e lógico. Leitura fácil e curta. Sempre um clássico.",
+        cover: "https://m.media-amazon.com/images/I/913JKLHKN1L._AC_UF1000,1000_QL80_.jpg",
+        pdfLink: "http://www.dominiopublico.gov.br/download/texto/bv000257.pdf",
+        category: "Ficção"
+    },
+    
+
+    {
+        title: "Poesias - Fernando Pessoa",
+        description: "Não sei quantas almas tenho. Cada momento mudei. Continuamente me estranho. ",
+        cover: "https://m.media-amazon.com/images/I/61nonJamxkL._AC_UF1000,1000_QL80_.jpg",
+        pdfLink: "http://www.dominiopublico.gov.br/download/texto/jp000001.pdf",
+        category: "Poemas"
+    },
+    
+
+    {
+        title: "Fernando Pessoa - Mensagem",
+        description: "Mensagem reúne 44 poemas do português Fernando Pessoa que retratam o passado glorioso de seu país.",
+        cover: "https://m.media-amazon.com/images/I/71Bph51LGIL._AC_UF1000,1000_QL80_.jpg",
+        pdfLink: "http://www.dominiopublico.gov.br/download/texto/pe000004.pdf",
+        category: "Poemas"
+    },
+    
+
+    {
+        title: "Poesias - Fernando Pessoa",
+        description: "Não sei quantas almas tenho. Cada momento mudei. Continuamente me estranho. ",
+        cover: "https://m.media-amazon.com/images/I/61nonJamxkL._AC_UF1000,1000_QL80_.jpg",
+        pdfLink: "http://www.dominiopublico.gov.br/download/texto/jp000001.pdf",
+        category: "Ficção"
+    },
+    
+
+    {
+        title: "Dom Casmurro de Machado de Assis",
+        description: "Dom Casmurro é um romance realista e psicológico escrito por Machado de Assis, publicado em 1899.",
+        cover: "https://m.media-amazon.com/images/I/61Z2bMhGicL.jpg",
+        pdfLink: "http://www.dominiopublico.gov.br/download/texto/bv00180a.pdf",
+        category: "Ficção"
+    },
+    
+
+    {
+        title: "Drácula de Bram Stoker",
+        description: "O jovem advogado inglês Jonathan Harker aceita um trabalho em uma vila sombria nas brumas da Transilvânia.",
+        cover: "https://m.media-amazon.com/images/I/61MgodE1s0L._AC_UF1000,1000_QL80_.jpg",
+        pdfLink: "https://www.ebooksbrasil.org/adobeebook/draculap.pdf",
+        category: "Romance"
+    },
+    
+    {
+        title: "Orgulho e Preconceito",
+        description: "A história de amor entre Elizabeth Bennet e o orgulhoso Mr. Darcy, em meio a questões sociais.",
+        cover: "https://m.media-amazon.com/images/I/71Xta4Nf7uL._AC_UF1000,1000_QL80_.jpg",
+        pdfLink: "https://reciclaleitores.com.br/wp-content/uploads/2020/10/ORGULHO-E-PRECONCEITO-Austen-Jane.pdf",
+        category: "Romance"
+    },
+    {
+        title: "A História de Roma",
+        description: "A narrativa histórica de Roma desde sua fundação até o império, escrita por Tito Lívio.",
+        cover: "https://static3.tcdn.com.br/img/img_prod/796789/180_historia_de_roma_ab_urbe_condita_libri_6_volumes_39133_1_43e36906fa8258f92dc11b3239e3d8b8.png",
+        pdfLink: "https://repositorio.unesp.br/bitstreams/61347df6-7fc1-4220-8f02-f5e471fce475/download",
+        category: "História"
+    },
+    {
+        title: "A Origem das Espécies",
+        description: "A obra de Darwin que apresentou a teoria da evolução das espécies por meio da seleção natural.",
+        cover: "https://m.media-amazon.com/images/I/71IIZESq-uL._AC_UF1000,1000_QL80_.jpg",
+        pdfLink: "https://ecologia.ib.usp.br/ffa/arquivos/abril/darwin1.pdf",
+        category: "Ciência"
+    },
+    {
+        title: "Meditações",
+        description: "Reflexões do imperador romano Marco Aurélio sobre filosofia estoica e vida.",
+        cover: "https://m.media-amazon.com/images/I/612B0id4gNL._AC_UF1000,1000_QL80_.jpg",
+        pdfLink: "https://masculinistaopressoroficial.files.wordpress.com/2017/06/meditac3a7c3b5es-marco-aurc3a9lio.pdf",
+        category: "Filosofia"
+    },
+    {
+        title: "A Divina Comédia",
+        description: "A jornada de Dante pelo Inferno, Purgatório e Paraíso, explorando temas de moralidade e redenção.",
+        cover: "https://m.media-amazon.com/images/I/818Hap7wCcL._UF894,1000_QL80_.jpg",
+        pdfLink: "https://files.cercomp.ufg.br/weby/up/4/o/divinacomedia.pdf",
+        category: "Literatura"
+    },
+    {
+        title: "A História da Arte",
+        description: "Uma análise profunda sobre a evolução da arte ocidental, desde a Antiguidade até os tempos modernos.",
+        cover: "https://m.media-amazon.com/images/I/51b8w49NTLL._AC_UF1000,1000_QL80_.jpg",
+        pdfLink: "https://cursoseorientacoes.com/wp-content/uploads/2014/09/historia-da-arte-gombrich.pdf",
+        category: "Arte"
+    },
+    {
+        title: "O Príncipe",
+        description: "O famoso tratado de Maquiavel sobre política e poder, abordando a natureza do governo.",
+        cover: "https://m.media-amazon.com/images/I/81h4CdNxdgL.jpg",
+        pdfLink: "https://marcosfabionuva.com/wp-content/uploads/2011/08/o-prc3adncipe-madras.pdf",
+        category: "Política"
+    },
+    {
+        title: "A Bíblia (Versão King James)",
+        description: "A tradução em inglês de uma das mais influentes obras religiosas de todos os tempos.",
+        cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQeQ1pG_OqW-t9mgL65rwkB57Wo47GgXeGy6w&s",
+        pdfLink: "https://archive.org/download/biblia-king-james-1611-robert-barker-1611-the-holy-bible-impresso-colorido/B%C3%ADblia%20King%20James%201611%20-%20Robert%20Barker%201611%20The%20Holy%20Bible%20IMPRESSO%20COLORIDO_text.pdf",
+        category: "Religião"
+    },
+    {
+        title: "Psicologia do Indivíduo",
+        description: "A psicologia humana e o comportamento, explorando a natureza do indivíduo e sua psicologia.",
+        cover: "https://0.academia-photos.com/attachment_thumbnails/73750151/mini_magick20211028-26222-nszhed.png",
+        pdfLink: "https://www.uel.br/pos/pgac/wp-content/uploads/2014/04/Psicologia-e-An%C3%A1lise-do-Comportamento_Conceitos-e-Aplica%C3%A7%C3%B5es-%C3%A0-Educa%C3%A7%C3%A3o-Organiza%C3%A7%C3%B5es-Sa%C3%BAde-e-Cl%C3%ADnica.pdf",
+        category: "Psicologia"
+    },
+    {
+        title: "A Riqueza das Nações",
+        description: "O livro seminal de Adam Smith que fundamenta a teoria econômica clássica.",
+        cover: "https://www.jurua.com.br/images/prod/b/20/20104.jpg",
+        pdfLink: "https://www.ispsn.org/sites/default/files/documentos-virtuais/pdf/livrosparatodos.net_.adam_.smith_.riqueza.das_.nacoes.v.2.pdf",
+        category: "Economia"
+    },
+    {
+        title: "A Vida de Samuel Johnson",
+        description: "A biografia do famoso escritor e lexicógrafo inglês, Samuel Johnson.",
+        cover: "https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781627932813/the-life-of-samuel-johnson-9781627932813_hr.jpg",
+        pdfLink: "https://ia801002.us.archive.org/12/items/390746327vidadesamueljohnsonjamesboswellpdf/390746327-Vida-de-Samuel-Johnson-James-Boswell-pdf.pdf",
+        category: "Biografias"
+    },
+    {
+        title: "A Origem das Espécies",
+        description: "A obra fundamental que explica a teoria da evolução das espécies por seleção natural.",
+        cover: "https://www.baixelivros.com.br/media/2020/05/origem-das-especies.jpg",
+        pdfLink: "https://ecologia.ib.usp.br/ffa/arquivos/abril/darwin1.pdf",
+        category: "Antropologia"
+    },
+    {
+        title: "O Manifesto Comunista",
+        description: "A obra que introduziu os princípios do marxismo e da luta de classes.",
+        cover: "https://m.media-amazon.com/images/I/81mZS2qHGkL.jpg",
+        pdfLink: "https://www.pcp.pt/publica/edicoes/25501144/manifes.pdf",
+        category: "Sociologia"
+    },
+    {
+        title: "Os Elementos",
+        description: "A obra clássica de Euclides, que serve como base para a geometria moderna.",
+        cover: "https://livrariacampagnolo.com.br/image/cache/data/api/produtos/3027-515x800.jpg",
+        pdfLink: "https://ia601508.us.archive.org/10/items/Os.Elementos-Euclides/OsElementos-Euclides.pdf",
+        category: "Matemática"
+    },
+    {
+        title: "A Era das Revoluções",
+        description: "A análise das grandes revoluções políticas e sociais que moldaram o mundo moderno.",
+        cover: "https://s3-sa-east-1.amazonaws.com/loja2/64e01cfbc6ae119afd835f266f3b088b.jpg",
+        pdfLink: "https://diegoazziufabc.wordpress.com/wp-content/uploads/2016/09/hobsbawm-eric-j-a-era-das-revoluc3a7c3b5es.pdf",
+        category: "Engenharia"
+    }
+];
+
+        // Exibir os livros na tela
+        function displayBooks() {
+            const grid = document.getElementById('bookGrid');
+            grid.innerHTML = '';
+
+            books.forEach(book => {
+                const card = document.createElement('div');
+                card.className = 'book-card';
+                card.innerHTML = `
+                    <img src="${book.cover}" alt="${book.title}">
+                    <div class="book-card-body">
+                        <h5>${book.title}</h5>
+                        <p>${book.description}</p>
+                        <a href="${book.pdfLink}" target="_blank">Baixar PDF</a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Filtrar livros
+        function filterBooks() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const filteredBooks = books.filter(book => {
+                return (
+                    book.title.toLowerCase().includes(searchInput) ||
+                    book.description.toLowerCase().includes(searchInput)
+                ) && (categoryFilter === '' || book.category === categoryFilter);
+            });
+            displayFilteredBooks(filteredBooks);
+        }
+
+        function displayFilteredBooks(filteredBooks) {
+            const grid = document.getElementById('bookGrid');
+            grid.innerHTML = '';
+
+            filteredBooks.forEach(book => {
+                const card = document.createElement('div');
+                card.className = 'book-card';
+                card.innerHTML = `
+                    <img src="${book.cover}" alt="${book.title}">
+                    <div class="book-card-body">
+                        <h5>${book.title}</h5>
+                        <p>${book.description}</p>
+                        <a href="${book.pdfLink}" target="_blank">Baixar PDF</a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Exibir os livros inicialmente
+        displayBooks();
+    </script>
+
+</body>
+</html>
